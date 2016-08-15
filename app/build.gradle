@@ -4,6 +4,8 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 23
     }
 
     buildTypes {
@@ -19,6 +21,7 @@ android {
 }
 
 dependencies {
+    compile project(":min3d")
     compile files('libs/mlert.jar')
     testCompile 'junit:junit:4.12'
 }
