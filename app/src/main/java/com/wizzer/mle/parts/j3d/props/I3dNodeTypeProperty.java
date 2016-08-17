@@ -9,6 +9,7 @@ public interface I3dNodeTypeProperty extends IMlePropPart
 {
     public enum NodeType
     {
+        NONE,
         TRANSFORM,
         CAMERA,
         LIGHT,
