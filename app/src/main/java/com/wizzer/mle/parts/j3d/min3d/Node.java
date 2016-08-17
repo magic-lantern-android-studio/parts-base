@@ -10,7 +10,7 @@ import com.wizzer.mle.parts.j3d.props.I3dNodeTypeProperty;
  */
 public class Node extends Object3dContainer
 {
-    private I3dNodeTypeProperty m_nodeType;
+    private I3dNodeTypeProperty.NodeType m_nodeType;
 
     public Node(Object3dContainer container)
     {
@@ -37,9 +37,9 @@ public class Node extends Object3dContainer
         }
     }
 
-    public void setNodeType(I3dNodeTypeProperty nodetype) { m_nodeType = nodetype; }
+    public void setNodeType(I3dNodeTypeProperty.NodeType nodetype) { m_nodeType = nodetype; }
 
-    public I3dNodeTypeProperty getNodeType() { return m_nodeType; }
+    public I3dNodeTypeProperty.NodeType getNodeType() { return m_nodeType; }
 
     public static void dump(IObject3dContainer objContainer)
     {
