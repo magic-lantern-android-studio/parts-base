@@ -32,8 +32,7 @@ package com.wizzer.mle.parts.j2d.props;
 import com.wizzer.mle.runtime.core.IMleObject;
 
 // Import Magic Lantern Parts classes.
-import com.wizzer.mle.parts.j2d.props.IMlePropPart;
-import com.wizzer.mle.parts.j2d.mrefs.IImageMediaRef;
+import com.wizzer.mle.parts.IMlePropPart;
 
 /**
  * This interface defines an image property.

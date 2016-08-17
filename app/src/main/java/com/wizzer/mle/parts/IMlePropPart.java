@@ -26,7 +26,7 @@
 // COPYRIGHT_END
 
 // Declare package.
-package com.wizzer.mle.parts.j2d.props;
+package com.wizzer.mle.parts;
 
 // Import Magic Lantern Runtime Engine classes.
 import com.wizzer.mle.runtime.core.IMleObject;
