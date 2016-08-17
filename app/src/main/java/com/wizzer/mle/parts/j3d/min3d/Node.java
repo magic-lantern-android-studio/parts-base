@@ -4,6 +4,7 @@ import com.wizzer.mle.min3d.core.Object3d;
 import com.wizzer.mle.min3d.core.Object3dContainer;
 import com.wizzer.mle.min3d.interfaces.IObject3dContainer;
 import com.wizzer.mle.parts.j3d.props.I3dNodeTypeProperty;
+import com.wizzer.mle.parts.j3d.roles.I3dRole;
 
 /**
  * Created by msm on 8/12/16.
@@ -11,35 +12,49 @@ import com.wizzer.mle.parts.j3d.props.I3dNodeTypeProperty;
 public class Node extends Object3dContainer
 {
     private I3dNodeTypeProperty.NodeType m_nodeType;
+    private I3dRole m_role;
 
-    public Node(Object3dContainer container)
+    public Node(I3dNodeTypeProperty.NodeType nodeType, I3dRole role)
     {
-        _vertices = container.vertices().clone();
-        _faces = container.faces().clone();
+        super();
+
+        m_nodeType = nodeType;
+        m_role = role;
+    }
+
+    public Node(Node node)
+    {
+        m_nodeType = node.getNodeType();
+        m_role = node.m_role;
+
+        _vertices = node.vertices().clone();
+        _faces = node.faces().clone();
         // Todo: sharing texture list, should clone it instead?
-        _textures = container.textures();
+        _textures = node.textures();
 
-        this.position().x = container.position().x;
-        this.position().y = container.position().y;
-        this.position().z = container.position().z;
+        this.position().x = node.position().x;
+        this.position().y = node.position().y;
+        this.position().z = node.position().z;
 
-        this.rotation().x = container.rotation().x;
-        this.rotation().y = container.rotation().y;
-        this.rotation().z = container.rotation().z;
+        this.rotation().x = node.rotation().x;
+        this.rotation().y = node.rotation().y;
+        this.rotation().z = node.rotation().z;
 
         this.scale().x = scale().x;
         this.scale().y = scale().y;
         this.scale().z = scale().z;
 
-        for (int i = 0; i < container.numChildren(); i++)
+        for (int i = 0; i < node.numChildren(); i++)
         {
-            this.addChild(container.getChildAt(i));
+            this.addChild(node.getChildAt(i));
         }
     }
 
-    public void setNodeType(I3dNodeTypeProperty.NodeType nodetype) { m_nodeType = nodetype; }
+    public void setNodeType(I3dNodeTypeProperty.NodeType nodeType) { m_nodeType = nodeType; }
 
     public I3dNodeTypeProperty.NodeType getNodeType() { return m_nodeType; }
+
+    public I3dRole getRole() { return m_role; }
 
     public static void dump(IObject3dContainer objContainer)
     {
@@ -57,4 +72,6 @@ public class Node extends Object3dContainer
                 System.out.println(object.toString());
         }
     }
+
+    private Node() {}
 }
