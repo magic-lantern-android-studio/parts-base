@@ -11,8 +11,13 @@ import com.wizzer.mle.parts.j3d.roles.I3dRole;
  */
 public class Node extends Object3dContainer
 {
+    // The type of Node.
     private I3dNodeTypeProperty.NodeType m_nodeType;
+    // The associated 3d role.
     private I3dRole m_role;
+    // The parent of this Node, may be null.
+    private Node m_parent;
+    // Children Nodes are handled indirectly by Object3dContainer.
 
     public Node(I3dNodeTypeProperty.NodeType nodeType, I3dRole role)
     {
@@ -20,13 +25,26 @@ public class Node extends Object3dContainer
 
         m_nodeType = nodeType;
         m_role = role;
+        m_parent = null;
+    }
+
+    public Node(I3dNodeTypeProperty.NodeType nodeType, I3dRole role, Node parent)
+    {
+        super();
+
+        m_nodeType = nodeType;
+        m_role = role;
+        m_parent = parent;
     }
 
     public Node(Node node)
     {
+        // Copy Node fields.
         m_nodeType = node.getNodeType();
         m_role = node.m_role;
+        m_parent = node.m_parent;
 
+        // Copy Object3dContainer fields.
         _vertices = node.vertices().clone();
         _faces = node.faces().clone();
         // Todo: sharing texture list, should clone it instead?
@@ -50,11 +68,15 @@ public class Node extends Object3dContainer
         }
     }
 
-    public void setNodeType(I3dNodeTypeProperty.NodeType nodeType) { m_nodeType = nodeType; }
+    //public void setNodeType(I3dNodeTypeProperty.NodeType nodeType) { m_nodeType = nodeType; }
 
     public I3dNodeTypeProperty.NodeType getNodeType() { return m_nodeType; }
 
     public I3dRole getRole() { return m_role; }
+
+    public void setParent(Node parent) { m_parent = parent; }
+
+    public Node getParent() { return m_parent; }
 
     public static void dump(IObject3dContainer objContainer)
     {
@@ -73,5 +95,6 @@ public class Node extends Object3dContainer
         }
     }
 
+    // Hide the default constructor.
     private Node() {}
 }
