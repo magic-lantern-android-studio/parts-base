@@ -58,9 +58,9 @@ public class Node extends Object3dContainer
         this.rotation().y = node.rotation().y;
         this.rotation().z = node.rotation().z;
 
-        this.scale().x = scale().x;
-        this.scale().y = scale().y;
-        this.scale().z = scale().z;
+        this.scale().x = node.scale().x;
+        this.scale().y = node.scale().y;
+        this.scale().z = node.scale().z;
 
         for (int i = 0; i < node.numChildren(); i++)
         {
@@ -68,14 +68,44 @@ public class Node extends Object3dContainer
         }
     }
 
-    //public void setNodeType(I3dNodeTypeProperty.NodeType nodeType) { m_nodeType = nodeType; }
+    public void setAsModel(Model model, I3dRole role)
+    {
+        // Set Node fields.
+        m_nodeType = I3dNodeTypeProperty.NodeType.GEOMETRY;
+        m_role = role;
+        m_parent = null;
 
+        // Copy Object3dContainer fields.
+        _vertices = model.vertices().clone();
+        _faces = model.faces().clone();
+        // Todo: sharing texture list, should clone it instead?
+        _textures = model.textures();
+
+        this.position().x = model.position().x;
+        this.position().y = model.position().y;
+        this.position().z = model.position().z;
+
+        this.rotation().x = model.rotation().x;
+        this.rotation().y = model.rotation().y;
+        this.rotation().z = model.rotation().z;
+
+        this.scale().x = model.scale().x;
+        this.scale().y = model.scale().y;
+        this.scale().z = model.scale().z;
+
+        for (int i = 0; i < model.numChildren(); i++)
+        {
+            this.addChild(model.getChildAt(i));
+        }
+    }
+
+    public void setNodeType(I3dNodeTypeProperty.NodeType nodeType) { m_nodeType = nodeType; }
     public I3dNodeTypeProperty.NodeType getNodeType() { return m_nodeType; }
 
+    public void setRole(I3dRole role) { m_role = role; }
     public I3dRole getRole() { return m_role; }
 
     public void setParent(Node parent) { m_parent = parent; }
-
     public Node getParent() { return m_parent; }
 
     public static void dump(IObject3dContainer objContainer)
