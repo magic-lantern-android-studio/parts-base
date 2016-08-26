@@ -99,6 +99,8 @@ public class Node extends Object3dContainer
         }
     }
 
+    public void setTextures(TextureMap texture) { _textures = texture.getTextures(); }
+
     public void setNodeType(I3dNodeTypeProperty.NodeType nodeType) { m_nodeType = nodeType; }
     public I3dNodeTypeProperty.NodeType getNodeType() { return m_nodeType; }
 

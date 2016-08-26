@@ -15,4 +15,6 @@ public class TextureMap
         // Todo: sharing texture list, should clone it instead?
         m_textures = container.textures();
     }
+
+    public TextureList getTextures() { return m_textures; }
 }
