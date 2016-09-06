@@ -39,14 +39,18 @@ public class Node extends Object3dContainer
 
     public Node(Node node)
     {
+        super();
+
         // Copy Node fields.
         m_nodeType = node.getNodeType();
         m_role = node.m_role;
         m_parent = node.m_parent;
 
         // Copy Object3dContainer fields.
-        _vertices = node.vertices().clone();
-        _faces = node.faces().clone();
+        if (node.vertices() != null)
+            _vertices = node.vertices().clone();
+        if (node.faces() != null)
+            _faces = node.faces().clone();
         // Todo: sharing texture list, should clone it instead?
         _textures = node.textures();
 
@@ -76,8 +80,10 @@ public class Node extends Object3dContainer
         m_parent = null;
 
         // Copy Object3dContainer fields.
-        _vertices = model.vertices().clone();
-        _faces = model.faces().clone();
+        if (model.vertices() != null)
+            _vertices = model.vertices().clone();
+        if (model.faces() != null)
+            _faces = model.faces().clone();
         // Todo: sharing texture list, should clone it instead?
         _textures = model.textures();
 

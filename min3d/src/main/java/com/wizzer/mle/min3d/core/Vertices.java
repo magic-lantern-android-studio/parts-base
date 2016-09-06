@@ -177,7 +177,16 @@ public class Vertices
 	
 	public Vertices clone()
 	{
-		Vertices v = new Vertices(_points.clone(), _uvs.clone(), _normals.clone(), _colors.clone());
+		UvBufferList uvs = null;
+		Number3dBufferList normals = null;
+		Color4BufferList colors = null;
+
+		if (hasColors()) colors = _colors.clone();
+		if (hasNormals()) normals = _normals.clone();
+		if (hasUvs()) uvs = _uvs.clone();
+
+		Vertices v = new Vertices(_points.clone(), uvs, normals, colors);
+
 		return v;
 	}
 }
