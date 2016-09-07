@@ -20,6 +20,12 @@ public class ObjLoader
         m_parser = new ObjParser(resources, resourceID, generateMipMap);
     }
 
+    public ObjLoader(Resources resources, int id, boolean generateMipMap)
+    {
+        String resourceID = resources.getResourceName(id);
+        m_parser = new ObjParser(resources, resourceID, generateMipMap);
+    }
+
     public Model loadObject() throws IOException
     {
         m_parser.parse();
