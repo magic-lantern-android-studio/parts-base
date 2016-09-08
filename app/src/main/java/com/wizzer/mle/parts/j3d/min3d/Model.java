@@ -1,11 +1,14 @@
 package com.wizzer.mle.parts.j3d.min3d;
 
+import android.util.Log;
+
 import com.wizzer.mle.min3d.core.Object3dContainer;
 import com.wizzer.mle.min3d.core.Object3d;
 import com.wizzer.mle.min3d.interfaces.IObject3dContainer;
 import com.wizzer.mle.min3d.core.Vertices;
 import com.wizzer.mle.min3d.core.FacesBufferedList;
 import com.wizzer.mle.min3d.core.TextureList;
+import com.wizzer.mle.runtime.MleTitle;
 
 /**
  * Created by msm on 8/12/16.
@@ -41,7 +44,7 @@ public class Model extends Object3dContainer
     {
         if (objContainer == null) return;
 
-        System.out.println(objContainer.toString());
+        Log.i(MleTitle.DEBUG_TAG, objContainer.toString());
 
         // Process children.
         int numChildren = objContainer.numChildren();
@@ -50,7 +53,7 @@ public class Model extends Object3dContainer
             if (object instanceof IObject3dContainer)
                 Model.dump((IObject3dContainer) object);
             else
-                System.out.println(object.toString());
+                Log.i(MleTitle.DEBUG_TAG, object.toString());
         }
     }
 }

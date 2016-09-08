@@ -5,6 +5,9 @@ import com.wizzer.mle.min3d.core.Object3dContainer;
 import com.wizzer.mle.min3d.interfaces.IObject3dContainer;
 import com.wizzer.mle.parts.j3d.props.I3dNodeTypeProperty;
 import com.wizzer.mle.parts.j3d.roles.I3dRole;
+import com.wizzer.mle.runtime.MleTitle;
+
+import android.util.Log;
 
 /**
  * Created by msm on 8/12/16.
@@ -120,7 +123,7 @@ public class Node extends Object3dContainer
     {
         if (objContainer == null) return;
 
-        System.out.println(objContainer.toString());
+        Log.i(MleTitle.DEBUG_TAG, objContainer.toString());
 
         // Process children.
         int numChildren = objContainer.numChildren();
@@ -129,7 +132,7 @@ public class Node extends Object3dContainer
             if (object instanceof IObject3dContainer)
                 Node.dump((IObject3dContainer) object);
             else
-                System.out.println(object.toString());
+                Log.i(MleTitle.DEBUG_TAG, object.toString());
         }
     }
 
