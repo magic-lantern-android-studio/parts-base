@@ -141,6 +141,9 @@ public class Node extends Object3dContainer
     public void init()
         throws MleRuntimeException
     {
+        // Create buffer arrays.
+        constructBuffers();
+
         // Initialize OpenGL ES 2.0 shaders.
         m_programHandle = initShaders();
 
@@ -148,6 +151,9 @@ public class Node extends Object3dContainer
         m_MVPMatrixHandle = GLES20.glGetUniformLocation(m_programHandle, "u_MVPMatrix");
         m_PositionHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Position");
         m_ColorHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Color");
+
+        // Tell OpenGL to use this program when rendering.
+        GLES20.glUseProgram(m_programHandle);
     }
 
     private FloatBuffer m_vertexBuffer;
@@ -156,6 +162,9 @@ public class Node extends Object3dContainer
     //private FloatBuffer m_texcoordsBuffer;
     private ShortBuffer m_facesBuffer;
 
+    // Create the buffers we will use to model the data. Note that this data may already be
+    // available in the Buffer List objects; so visit this routine later for optimizing
+    // memory usage.
     private void constructBuffers()
     {
         // Create buffer from list of vertices.
