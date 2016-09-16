@@ -11,6 +11,7 @@ import com.wizzer.mle.parts.j3d.roles.I3dRole;
 import com.wizzer.mle.runtime.MleTitle;
 import com.wizzer.mle.runtime.core.MleRuntimeException;
 
+import android.opengl.Matrix;
 import android.util.Log;
 import android.opengl.GLES20;
 
@@ -37,9 +38,9 @@ public class Node extends Object3dContainer
     // This will be used to pass in the transformation matrix.
     private int m_MVPMatrixHandle;
     // This will be used to pass in model position information.
-    private int m_PositionHandle;
+    private int m_positionHandle;
     // This will be used to pass in model color information.
-    private int m_ColorHandle;
+    private int m_colorHandle;
 
     public Node(I3dNodeTypeProperty.NodeType nodeType, I3dRole role)
     {
@@ -127,16 +128,26 @@ public class Node extends Object3dContainer
         }
     }
 
-    public void setTextures(TextureMap texture) { _textures = texture.getTextures(); }
+    public void setTextures(TextureMap texture)
+    { _textures = texture.getTextures(); }
 
-    public void setNodeType(I3dNodeTypeProperty.NodeType nodeType) { m_nodeType = nodeType; }
-    public I3dNodeTypeProperty.NodeType getNodeType() { return m_nodeType; }
+    public void setNodeType(I3dNodeTypeProperty.NodeType nodeType)
+    { m_nodeType = nodeType; }
 
-    public void setRole(I3dRole role) { m_role = role; }
-    public I3dRole getRole() { return m_role; }
+    public I3dNodeTypeProperty.NodeType getNodeType()
+    { return m_nodeType; }
 
-    public void setParent(Node parent) { m_parent = parent; }
-    public Node getParent() { return m_parent; }
+    public void setRole(I3dRole role)
+    { m_role = role; }
+
+    public I3dRole getRole()
+    { return m_role; }
+
+    public void setParent(Node parent)
+    { m_parent = parent; }
+
+    public Node getParent()
+    { return m_parent; }
 
     public void init()
         throws MleRuntimeException
@@ -149,8 +160,8 @@ public class Node extends Object3dContainer
 
         // Set program handles. These will later be used to pass in values to the program.
         m_MVPMatrixHandle = GLES20.glGetUniformLocation(m_programHandle, "u_MVPMatrix");
-        m_PositionHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Position");
-        m_ColorHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Color");
+        m_positionHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Position");
+        m_colorHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Color");
 
         // Tell OpenGL to use this program when rendering.
         GLES20.glUseProgram(m_programHandle);
@@ -207,9 +218,79 @@ public class Node extends Object3dContainer
         m_facesBuffer.position(0);
     }
 
+    /*
+     * Store the model matrix. This matrix is used to move models from object space
+     * (where each model can be thought of being located at the center of the universe)
+     * to world space.
+     */
+    private float[] m_modelMatrix = new float[16];
+    /* Allocate storage for the final combined matrix. This will be passed into the shader program. */
+    private float[] m_MVPMatrix = new float[16];
+    /* How many elements per vertex. Currently 3 elements * 4 bytes. */
+    private final int m_strideBytes =
+        Number3dBufferList.PROPERTIES_PER_ELEMENT * Number3dBufferList.BYTES_PER_PROPERTY;
+    // ToDo: bump the number of stride bytes for color information.
+    //   (Number3dBufferList.PROPERTIES_PER_ELEMENT * Number3dBufferList.BYTES_PER_PROPERTY) +
+    //   (Color4BufferList.PROPERTIES_PER_ELEMENT * Color4BufferList.BYTES_PER_PROPERTY)
+    /* Offset of the position data. */
+    private final int m_positionOffset = 0;
+    /* Size of the position data in elements (3). */
+    private final int m_positionDataSize = Number3dBufferList.PROPERTIES_PER_ELEMENT;
+    /* Offset of the color data (3). */
+    private final int m_colorOffset = Number3dBufferList.PROPERTIES_PER_ELEMENT;
+    /* Size of the color data in elements (4). */
+    private final int m_colorDataSize = Color4BufferList.PROPERTIES_PER_ELEMENT;
+
     public void render()
     {
+        float[] translation = new float[3];
+        float[] rotation = new float[3];
+        float[] scale = new float[3];
 
+        translation[0] = this.position().x;
+        translation[1] = this.position().y;
+        translation[2] = this.position().z;
+        rotation[0] = this.rotation().x;
+        rotation[1] = this.rotation().y;
+        rotation[2] = this.rotation().z;
+        scale[0] = this.scale().x;
+        scale[1] = this.scale().y;
+        scale[2] = this.scale().z;
+
+        Matrix.setIdentityM(m_modelMatrix, 0);
+        Matrix.translateM(m_modelMatrix, 0, translation[0], translation[1], translation[2]);
+        Matrix.rotateM(m_modelMatrix, 0, rotation[0], 1, 0, 0);
+        Matrix.rotateM(m_modelMatrix, 0, rotation[1], 0, 1, 0);
+        Matrix.rotateM(m_modelMatrix, 0, rotation[2], 0, 0, 1);
+        Matrix.scaleM(m_modelMatrix, 0, scale[0], scale[1], scale[2]);
+
+        // Pass in the position information.
+        m_vertexBuffer.position(m_positionOffset);
+        GLES20.glVertexAttribPointer(m_positionHandle, m_positionDataSize, GLES20.GL_FLOAT, false,
+            m_strideBytes, m_vertexBuffer);
+
+        GLES20.glEnableVertexAttribArray(m_positionHandle);
+
+        if (this.hasVertexColors())
+        {
+            // Pass in the color information
+            m_vertexBuffer.position(m_colorOffset);
+            GLES20.glVertexAttribPointer(m_colorHandle, m_colorDataSize, GLES20.GL_FLOAT, false,
+                m_strideBytes, m_vertexBuffer);
+
+            GLES20.glEnableVertexAttribArray(m_colorHandle);
+        }
+
+        // This multiplies the view matrix by the model matrix, and stores the result in the MVP
+        // matrix (which currently contains model * view).
+        //Matrix.multiplyMM(m_MVPMatrix, 0, m_viewMatrix, 0, m_modelMatrix, 0);
+
+        // This multiplies the modelview matrix by the projection matrix, and stores the result in
+        // the MVP matrix (which now contains model * view * projection).
+        //Matrix.multiplyMM(m_MVPMatrix, 0, m_projectionMatrix, 0, m_MVPMatrix, 0);
+
+        GLES20.glUniformMatrix4fv(m_MVPMatrixHandle, 1, false, m_MVPMatrix, 0);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
     }
 
     public static void dump(IObject3dContainer objContainer)
