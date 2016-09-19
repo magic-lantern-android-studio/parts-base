@@ -241,7 +241,7 @@ public class Node extends Object3dContainer
     /* Size of the color data in elements (4). */
     private final int m_colorDataSize = Color4BufferList.PROPERTIES_PER_ELEMENT;
 
-    public void render()
+    public void render(float[] m_viewMatrix, float[] m_projectionMatrix)
     {
         float[] translation = new float[3];
         float[] rotation = new float[3];
@@ -283,11 +283,11 @@ public class Node extends Object3dContainer
 
         // This multiplies the view matrix by the model matrix, and stores the result in the MVP
         // matrix (which currently contains model * view).
-        //Matrix.multiplyMM(m_MVPMatrix, 0, m_viewMatrix, 0, m_modelMatrix, 0);
+        Matrix.multiplyMM(m_MVPMatrix, 0, m_viewMatrix, 0, m_modelMatrix, 0);
 
         // This multiplies the modelview matrix by the projection matrix, and stores the result in
         // the MVP matrix (which now contains model * view * projection).
-        //Matrix.multiplyMM(m_MVPMatrix, 0, m_projectionMatrix, 0, m_MVPMatrix, 0);
+        Matrix.multiplyMM(m_MVPMatrix, 0, m_projectionMatrix, 0, m_MVPMatrix, 0);
 
         GLES20.glUniformMatrix4fv(m_MVPMatrixHandle, 1, false, m_MVPMatrix, 0);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 3);
