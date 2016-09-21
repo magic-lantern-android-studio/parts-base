@@ -154,17 +154,6 @@ public class Node extends Object3dContainer
     {
         // Create buffer arrays.
         constructBuffers();
-
-        // Initialize OpenGL ES 2.0 shaders.
-        m_programHandle = initShaders();
-
-        // Set program handles. These will later be used to pass in values to the program.
-        m_MVPMatrixHandle = GLES20.glGetUniformLocation(m_programHandle, "u_MVPMatrix");
-        m_positionHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Position");
-        m_colorHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Color");
-
-        // Tell OpenGL to use this program when rendering.
-        GLES20.glUseProgram(m_programHandle);
     }
 
     private FloatBuffer m_vertexBuffer;
@@ -241,6 +230,40 @@ public class Node extends Object3dContainer
     /* Size of the color data in elements (4). */
     private final int m_colorDataSize = Color4BufferList.PROPERTIES_PER_ELEMENT;
 
+    /**
+     * Initialize rendering.
+     * <p>
+     * OpenGL ES shaders will be created, compiled and installed into the rendering
+     * pipeline. Also, the shader program will be initialized and installed.
+     * </p>
+     * <p>
+     * This call must be made during the OpenGL ES thread of execution. Otherwise, calls
+     * to OpenGL ES will fail and the routine will throw an exception.
+     * </p>
+     *
+     * @throws MleRuntimeException This exception is thrown if calls to OpenGL ES fail.
+     */
+    public void initRender()
+        throws MleRuntimeException
+    {
+        // Initialize OpenGL ES 2.0 shaders.
+        m_programHandle = initShaders();
+
+        // Set program handles. These will later be used to pass in values to the program.
+        m_MVPMatrixHandle = GLES20.glGetUniformLocation(m_programHandle, "u_MVPMatrix");
+        m_positionHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Position");
+        m_colorHandle = GLES20.glGetAttribLocation(m_programHandle, "a_Color");
+
+        // Tell OpenGL to use this program when rendering.
+        GLES20.glUseProgram(m_programHandle);
+    }
+
+    /**
+     * Render the Node.
+     *
+     * @param m_viewMatrix The view matrix to use during rendering.
+     * @param m_projectionMatrix The project matrix to us during rendering.
+     */
     public void render(float[] m_viewMatrix, float[] m_projectionMatrix)
     {
         float[] translation = new float[3];
