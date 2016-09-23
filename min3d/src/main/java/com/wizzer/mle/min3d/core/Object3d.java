@@ -304,8 +304,7 @@ public class Object3d
 		return _vertices.hasColors();
 	}
 
-
-	/**
+    /**
 	 * Clear object for garbage collection.
 	 */
 	public void clear()

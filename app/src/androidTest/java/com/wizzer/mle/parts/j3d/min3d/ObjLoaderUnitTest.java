@@ -37,9 +37,14 @@ public class ObjLoaderUnitTest extends ActivityTestCase
         Model model = loader.loadObject();
         assertNotNull(model);
         assertNotNull(model.vertices());
+        assertEquals(36, model.vertices().size());
         assertNotNull(model.faces());
-        assertFalse(model.hasVertexColors());
-        assertFalse(model.hasUvs());
+        assertEquals(12, model.faces().size());
+        assertTrue(model.hasVertexColors());
+        // ObjLoader created default colors even though none existed in the box.obj file.
+        assertTrue(model.hasUvs());
+        // ObjLoader created default texture coordinates event though none existed in the box.obj file.
         assertTrue(model.hasNormals());
+        assertEquals(36, model.normals().size());
     }
 }

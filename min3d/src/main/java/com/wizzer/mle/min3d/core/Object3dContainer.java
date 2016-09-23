@@ -12,6 +12,7 @@ public class Object3dContainer extends Object3d implements IObject3dContainer
 	{
 		super(0, 0, false, false, false);
 	}
+
 	/**
 	 * Adds container functionality to Object3d.
 	 * 

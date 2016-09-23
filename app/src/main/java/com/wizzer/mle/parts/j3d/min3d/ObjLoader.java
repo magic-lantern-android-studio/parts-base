@@ -28,9 +28,14 @@ public class ObjLoader
 
     public Model loadObject() throws IOException
     {
+        // Parse the OBJ file and initialize container.
         m_parser.parse();
         Object3dContainer container = m_parser.getParsedObject();
-        return new Model(container);
+
+        // The root of a Object3D scene graph hierarchy is returned. The container, itself,
+        // does not contain the parsed model data; but the first child of the container
+        // (or scene graph) does.
+        return new Model(container.getChildAt(0));
     }
 
     public Model loadObject(InputStream input) throws IOException

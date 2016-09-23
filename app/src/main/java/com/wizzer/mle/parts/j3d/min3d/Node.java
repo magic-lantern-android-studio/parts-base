@@ -123,11 +123,6 @@ public class Node extends Object3dContainer
         this.scale().x = model.scale().x;
         this.scale().y = model.scale().y;
         this.scale().z = model.scale().z;
-
-        for (int i = 0; i < model.numChildren(); i++)
-        {
-            this.addChild(model.getChildAt(i));
-        }
     }
 
     public void setTextures(TextureMap texture)
