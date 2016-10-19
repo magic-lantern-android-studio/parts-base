@@ -49,7 +49,7 @@ public interface I2dRole
      * @param max An array of two elements representing the
      * maximum (x, y) coordinate of the bounding region.
      */
-    public void getBounds(float min[], float max[]);
+    void getBounds(float min[], float max[]);
     
 	/** Set the bounding box of the Role. 
 	 * <p>
@@ -64,5 +64,5 @@ public interface I2dRole
      * @param max An array of two elements representing the
      * maximum (x, y) coordinate of the bounding region.
      */
-    public void setBounds(float min[], float max[]);
+    void setBounds(float min[], float max[]);
 }

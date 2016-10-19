@@ -29,7 +29,7 @@
 package com.wizzer.mle.parts.j3d.sets;
 
 // Import Magic Lantern Runtime Engine classes.
-import com.wizzer.mle.runtime.core.MleRole;
+import com.wizzer.mle.runtime.core.IMleRole;
 import com.wizzer.mle.runtime.core.MleRuntimeException;
 
 /**
@@ -40,25 +40,49 @@ import com.wizzer.mle.runtime.core.MleRuntimeException;
 public interface I3dSet
 {
     /**
-     * Attach <b>newR</b> after <b>curR</b>.  If curR is <b>null</b>,
-	 * newR is attached to the end of the list.
+     * Attach <b>newRole</b> to <b>prevRole</b>.  If prevRole is <b>null</b>,
+	 * newRole is attached to the end of the list.
 	 * 
-	 * @param curR The Role to attach to. May be <b>null</b>
-	 * @param newR The Role to attach.
+	 * @param prevRole The Role to attach to. May be <b>null</b>
+	 * @param newRole The Role to attach.
 	 * 
-	 * @throws MleRuntimeException This exception is thrown if <b>newR</b>
+	 * @throws MleRuntimeException This exception is thrown if <b>newRole</b>
 	 * is <b>null</b>.
 	 */
-    public void attachRoles(MleRole curR, MleRole newR)
+    void attachRoles(IMleRole prevRole, IMleRole newRole)
     	throws MleRuntimeException;
     
     /**
      * Detach specified Role from the layer list.
      * 
-     * @param curR The Role to detach.
+     * @param role The Role to detach.
 	 * 
-	 * @throws MleRuntimeException This exception is thrown if <b>curR</b>
+	 * @throws MleRuntimeException This exception is thrown if <b>role</b>
 	 * is <b>null</b>.
      */
-    public void detach(MleRole curR) throws MleRuntimeException;
+    void detach(IMleRole role) throws MleRuntimeException;
+
+	/**
+	 * Retrieve the view matrix for the 3D Set.
+	 * <p>
+	 * Roles use this utility to calculate the combined MVP matrix
+	 * for rendering.
+	 * </p>
+	 *
+	 * @return An array of 16 floating-point values is returned representing
+	 * the 4x4 view matrix.
+     */
+	float[] getViewMatrix();
+
+	/**
+	 * Retrieve the projection matrix for the 3D Set.
+	 * <p>
+	 * Roles use this utility to calculate the combined MVP matrix
+	 * for rendering.
+	 * </p>
+	 *
+	 * @return An array of 16 floating-point values is returned representing
+	 * the 4x4 projection matrix.
+	 */
+	float[] getProjectionMatrix();
 }
