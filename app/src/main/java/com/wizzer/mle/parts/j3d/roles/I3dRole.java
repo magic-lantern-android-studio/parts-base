@@ -1,5 +1,11 @@
+// COPYRIGHT_BEGIN
+// COPYRIGHT_END
+
+// Declare package.
 package com.wizzer.mle.parts.j3d.roles;
 
+// Import Magic Lantern classes.
+import com.wizzer.mle.math.MlTransform;
 import com.wizzer.mle.runtime.core.IMleRole;
 import com.wizzer.mle.runtime.core.MleRuntimeException;
 
@@ -53,6 +59,34 @@ public interface I3dRole
      * @return An integer is returned indicating the number of children.
      */
     int numChildren();
+
+    /**
+     * Set the Transform on the 3D Role.
+     * <p>
+     * The transform contains the translation, rotation and scale
+     * parameters of the role.
+     * </p>
+     *
+     * @param transform The Transform matrix to set.
+     *
+     * @return If the transform is successfully set, then <b>true</b>
+     * will be returned. Otherwise, <b>false</b> will be returned.
+     */
+    boolean setTransform(MlTransform transform);
+
+    /**
+     * Get the Transform on the 3D Role.
+     * <p>
+     * The transform contains the translation, rotation and scale
+     * parameters of the role.
+     * </p>
+     *
+     * @param transform The Transform matrix to retrieve.
+     *
+     * @return If the transform is successfully retrieved, then <b>true</b>
+     * will be returned. Otherwise, <b>false</b> will be returned.
+     */
+    boolean getTransform(MlTransform transform);
 
     /**
      * Initialize rendering in the role.
